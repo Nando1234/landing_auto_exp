@@ -1,23 +1,21 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext_1';
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 
-interface ProtectedRouteProps {
+interface Props {
   children: React.ReactNode;
-  requiredRole?: 'admin' | 'engineer' | 'client';
+  requiredRole: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { isAuthenticated, user } = useAuth();
+const ProtectedRoute = ({ children, requiredRole }: Props) => {
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (!token || role !== requiredRole) {
+    // No autenticado o rol incorrecto, redirige a login admin
+    return <Navigate to="/admin/login" replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to="/" replace />;
-  }
-
+  // Usuario autenticado y con rol correcto
   return <>{children}</>;
 };
 

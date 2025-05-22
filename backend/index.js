@@ -2,20 +2,27 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+dotenv.config();
+console.log('MONGO_URI:', process.env.MONGO_URI);
 import mongoose from 'mongoose';
 import blogRoutes from './routes/blogRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
-import serviceRoutes from './routes/serviceRoutes.js';
+import serviceRoutes from './routes/servicesRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import adminRoutes from './routes/adminRoutes.js'; // Nueva importación
 import authRoutes from './routes/authRoutes.js'; // Nueva importación para autenticación
-
-// Load environment variables
-dotenv.config();
+import servicesRoutes from './routes/servicesRoutes.js';
+import clientsRoutes from './routes/clientsRoutes.js';
+import testimonialsRoutes from './routes/testimonialsRoutes.js';
+const app = express();
+app.use('/api/services', servicesRoutes);
+app.use('/api/clients', clientsRoutes);
+app.use('/api/testimonials', testimonialsRoutes);
 
 // Initialize express
-const app = express();
 
+
+app.use(express.json());
 // Middleware
 app.use(cors());
 app.use(helmet());
@@ -38,8 +45,7 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB and start server
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
