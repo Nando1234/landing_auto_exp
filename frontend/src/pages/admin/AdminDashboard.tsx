@@ -1,9 +1,10 @@
-// src/pages/admin/AdminDashboard.tsx
-import { Briefcase, FileText, Users, Settings, ArrowRight } from 'lucide-react';
-import { Outlet } from 'react-router-dom';
-import Card from "../../components/common/Card";
-import Button from "../../components/common/Button";
-import SectionHeading from "../../components/common/SectionHeading";
+import { 
+  Briefcase, Settings, Home, Users, Layers, FileText, Mail, ArrowRight 
+} from 'lucide-react';
+import { Outlet, Link } from 'react-router-dom';
+import Card from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import SectionHeading from '../../components/common/SectionHeading';
 
 const AdminDashboard = () => {
   return (
@@ -23,10 +24,9 @@ const AdminDashboard = () => {
         </Button>
       </div>
 
-      {/* Contenido básico sin componentes adicionales */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <div>
               <p className="text-sm font-medium text-gray-500">Proyectos Activos</p>
               <p className="text-3xl font-bold mt-2">12</p>
@@ -37,8 +37,33 @@ const AdminDashboard = () => {
             </div>
           </div>
         </Card>
+
+        {/* Enlaces a secciones editables */}
+        {[
+          { to: '/admin/inicio', icon: Home, label: 'Inicio' },
+          { to: '/admin/nosotros', icon: Users, label: 'Nosotros' },
+          { to: '/admin/servicios', icon: Layers, label: 'Servicios' },
+          { to: '/admin/proyectos', icon: Briefcase, label: 'Proyectos' },
+          { to: '/admin/clientes', icon: Users, label: 'Clientes' },
+          { to: '/admin/blog', icon: FileText, label: 'Blog' },
+          { to: '/admin/contacto', icon: Mail, label: 'Contacto' },
+        ].map(({ to, icon: Icon, label }) => (
+          <Card key={to} className="p-6">
+            <Link
+              to={to}
+              className="flex justify-between items-center text-primary-600 hover:text-primary-800"
+            >
+              <span className="font-semibold flex items-center gap-2">
+                <Icon size={20} />
+                {label}
+              </span>
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </Card>
+        ))}
       </div>
 
+      {/* Aquí se renderizan las rutas hijas para editar cada sección */}
       <Outlet />
     </div>
   );
